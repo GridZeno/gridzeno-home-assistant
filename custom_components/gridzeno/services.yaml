@@ -1,0 +1,113 @@
+charge_from_grid:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: gridzeno
+    target_soc:
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 100
+          unit_of_measurement: "%"
+    duration:
+      required: true
+      default: 60
+      selector:
+        number:
+          min: 15
+          max: 720
+          unit_of_measurement: min
+    export_limit:
+      selector:
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
+hold_battery:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: gridzeno
+    duration:
+      required: true
+      default: 60
+      selector:
+        number:
+          min: 15
+          max: 720
+          unit_of_measurement: min
+    export_limit:
+      selector:
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
+sell_from_battery:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: gridzeno
+    power:
+      required: true
+      selector:
+        number:
+          min: 100
+          max: 30000
+          step: 100
+          unit_of_measurement: W
+    floor_soc:
+      selector:
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
+    duration:
+      required: true
+      default: 30
+      selector:
+        number:
+          min: 15
+          max: 720
+          unit_of_measurement: min
+    export_limit:
+      selector:
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
+limit_export:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: gridzeno
+    export_limit:
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
+    duration:
+      required: true
+      default: 60
+      selector:
+        number:
+          min: 15
+          max: 720
+          unit_of_measurement: min
+release:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: gridzeno

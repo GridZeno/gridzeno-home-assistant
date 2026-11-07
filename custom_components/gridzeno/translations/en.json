@@ -1,0 +1,246 @@
+{
+  "config": {
+    "flow_title": "GridZeno {device_id}",
+    "step": {
+      "user": {
+        "title": "Connect a GridZeno dongle",
+        "description": "Usually Home Assistant finds the dongle on your network by itself. If it does not, type its address here. You find it on the Dongle page in GridZeno.",
+        "data": {
+          "host": "Address",
+          "port": "Port"
+        }
+      },
+      "zeroconf_confirm": {
+        "title": "Connect GridZeno {device_id}?",
+        "description": "Home Assistant found the GridZeno dongle {device_id} at {host}. Next, Home Assistant shows a six-digit code, and you approve the connection in GridZeno."
+      },
+      "reauth_confirm": {
+        "title": "Connect GridZeno {device_id} again",
+        "description": "The dongle no longer knows this Home Assistant: the access was removed, or the dongle was paired to another account. Connect it again and approve it in GridZeno."
+      },
+      "reconfigure": {
+        "title": "Change the dongle's address",
+        "data": {
+          "host": "Address",
+          "port": "Port"
+        }
+      }
+    },
+    "progress": {
+      "wait_for_approval": "Open GridZeno (Integrations, Home Assistant) in the browser or the app. Approve the connection when GridZeno shows the same code as here:\n\n## {code}\n\nIf GridZeno shows another code, refuse it: then this is not your dongle. The request runs out after 10 minutes."
+    },
+    "error": {
+      "cannot_connect": "The dongle did not answer at that address.",
+      "not_a_dongle": "Something answered, but not a GridZeno dongle."
+    },
+    "abort": {
+      "already_configured": "This dongle is already connected. Its address has been updated.",
+      "cannot_connect": "The dongle did not answer.",
+      "not_a_dongle": "This is not a GridZeno dongle.",
+      "unsupported_api": "The dongle speaks a newer version of the local API. Update the GridZeno integration in HACS.",
+      "no_room": "Four Home Assistants are already connected to this dongle. Remove one in GridZeno first.",
+      "too_many": "The dongle has had too many requests. Wait a few minutes and try again.",
+      "pairing_failed": "The key exchange with the dongle failed. Something on the network may be in the way. Try again.",
+      "denied": "The connection was refused in GridZeno.",
+      "expired": "The request ran out before it was approved. Try again.",
+      "reauth_successful": "Connected again.",
+      "reconfigure_successful": "The address is changed.",
+      "another_dongle": "Another dongle answered at that address."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "pv_power": { "name": "Solar power" },
+      "grid_import_power": { "name": "Grid import" },
+      "grid_export_power": { "name": "Grid export" },
+      "load_power": { "name": "House consumption" },
+      "battery_power": { "name": "Battery power" },
+      "battery_charge_power": { "name": "Battery charging" },
+      "battery_discharge_power": { "name": "Battery discharging" },
+      "load_register_power": { "name": "Consumption (inverter register)" },
+      "battery_soc": { "name": "Battery" },
+      "string_power": { "name": "String {number}" },
+      "temperature_inverter": { "name": "Inverter temperature" },
+      "temperature_ipm": { "name": "Power module temperature" },
+      "temperature_boost": { "name": "Boost temperature" },
+      "temperature_battery": { "name": "Battery temperature" },
+      "energy_pv": { "name": "Solar energy" },
+      "energy_grid_import": { "name": "Energy bought" },
+      "energy_grid_export": { "name": "Energy sold" },
+      "energy_battery_charge": { "name": "Energy into the battery" },
+      "energy_battery_discharge": { "name": "Energy out of the battery" },
+      "energy_load": { "name": "House energy" },
+      "today_pv": { "name": "Solar energy today" },
+      "today_grid_import": { "name": "Bought today" },
+      "today_grid_export": { "name": "Sold today" },
+      "today_battery_charge": { "name": "Into the battery today" },
+      "today_battery_discharge": { "name": "Out of the battery today" },
+      "today_load": { "name": "House energy today" },
+      "buy_price": { "name": "Buy price" },
+      "sell_price": { "name": "Sell price" },
+      "spot_price": { "name": "Spot price" },
+      "cheapest_today": { "name": "Cheapest quarter today" },
+      "dearest_today": { "name": "Dearest quarter today" },
+      "cheapest_tomorrow": { "name": "Cheapest quarter tomorrow" },
+      "dearest_tomorrow": { "name": "Dearest quarter tomorrow" },
+      "solar_forecast_today": { "name": "Solar forecast today" },
+      "solar_forecast_tomorrow": { "name": "Solar forecast tomorrow" },
+      "solar_forecast_rest_of_today": { "name": "Solar forecast rest of today" },
+      "plan_now": {
+        "name": "Plan now",
+        "state": {
+          "charge_solar": "Charging from the sun",
+          "charge_grid": "Charging from the grid",
+          "hold": "Holding the battery",
+          "export": "Selling solar power",
+          "discharge_load": "Battery covers the house",
+          "discharge_export": "Selling from the battery",
+          "import": "Buying from the grid",
+          "idle": "Nothing to do"
+        }
+      },
+      "plan_now_until": { "name": "Plan now until" },
+      "plan_next": {
+        "name": "Plan next",
+        "state": {
+          "charge_solar": "Charging from the sun",
+          "charge_grid": "Charging from the grid",
+          "hold": "Holding the battery",
+          "export": "Selling solar power",
+          "discharge_load": "Battery covers the house",
+          "discharge_export": "Selling from the battery",
+          "import": "Buying from the grid",
+          "idle": "Nothing to do"
+        }
+      },
+      "plan_next_start": { "name": "Plan next from" },
+      "control_mode": {
+        "name": "Control",
+        "state": { "auto": "GridZeno controls", "manual": "You control" }
+      },
+      "writer": {
+        "name": "Controlled by",
+        "state": { "gridzeno": "GridZeno", "home_assistant": "Home Assistant", "none": "The inverter itself" }
+      },
+      "measured_at": { "name": "Last reading" },
+      "last_cloud_contact": { "name": "Last contact with GridZeno" },
+      "wifi_rssi": { "name": "WiFi signal" },
+      "uptime": { "name": "Uptime" },
+      "command_check": {
+        "name": "Last command check",
+        "state": {
+          "pending": "Checking",
+          "confirmed": "Confirmed",
+          "unconfirmed": "Not confirmed",
+          "at_limit": "At a limit",
+          "ended": "Ended"
+        }
+      }
+    },
+    "binary_sensor": {
+      "inverter_connected": { "name": "Reads the inverter" },
+      "cloud_connected": { "name": "Connected to GridZeno" },
+      "plan_stale": { "name": "Plan out of date" }
+    },
+    "select": {
+      "command": {
+        "name": "Command",
+        "state": {
+          "none": "The inverter's own settings",
+          "charge_grid": "Charge from the grid",
+          "hold": "Hold the battery",
+          "sell": "Sell from the battery",
+          "limit_export": "Limit selling to the grid"
+        }
+      }
+    },
+    "number": {
+      "charge_target": { "name": "Command: charge target" },
+      "sell_power": { "name": "Command: sell power" },
+      "sell_floor": { "name": "Command: sell floor" },
+      "command_duration": { "name": "Command: duration" },
+      "command_export_limit": { "name": "Command: export limit" }
+    },
+    "button": {
+      "release": { "name": "Give the inverter its own settings back" }
+    }
+  },
+  "exceptions": {
+    "unknown_entry": { "message": "That is not a GridZeno dongle in this Home Assistant." },
+    "read_only": { "message": "This Home Assistant may only read. Give it the right to control in GridZeno (connect it again and choose read and control)." },
+    "not_authorized": { "message": "The dongle no longer knows this Home Assistant. Connect it again." },
+    "cannot_connect": { "message": "The dongle did not answer." },
+    "bad_answer": { "message": "The dongle's answer could not be trusted (no valid signature). Try again; if it keeps happening, something on the network may be in the way." },
+    "refused": { "message": "The dongle refused: {code}." },
+    "refused_auto_mode": { "message": "GridZeno controls the plant. Choose to control it yourself under Automation in GridZeno first." },
+    "refused_scope": { "message": "This Home Assistant may only read." },
+    "refused_not_paired": { "message": "The dongle does not belong to a GridZeno account." },
+    "refused_no_battery": { "message": "The plant has no battery." },
+    "refused_export_limit_not_writable": { "message": "GridZeno may not change the export limit on this inverter." },
+    "refused_commands_disabled": { "message": "Control from Home Assistant is not switched on on this dongle yet." },
+    "refused_target_soc_out_of_range": { "message": "The target is outside the battery limits you set in GridZeno." },
+    "refused_power_out_of_range": { "message": "The power is outside what the inverter can do." },
+    "refused_floor_out_of_range": { "message": "The floor is outside the battery limits you set in GridZeno." },
+    "refused_control_not_allowed": { "message": "The dongle does not control this inverter: GridZeno has not released control of the model, or the inverter is not the model chosen." },
+    "refused_mode_not_supported": { "message": "This inverter cannot do that command." },
+    "refused_duration_out_of_range": { "message": "The duration must be 15 minutes to 12 hours." }
+  },
+  "issues": {
+    "dongle_api_newer": {
+      "title": "GridZeno {device_id} needs a newer integration",
+      "description": "The dongle speaks version {dongle_api} of its local API, and this integration knows version {integration_api}. Update the GridZeno integration in HACS. Until then, some values may be missing."
+    },
+    "dongle_api_older": {
+      "title": "GridZeno {device_id} needs new firmware",
+      "description": "The dongle speaks version {dongle_api} of its local API, and this integration expects version {integration_api}. The dongle updates itself from GridZeno; if it does not, write to GridZeno's support."
+    }
+  },
+  "services": {
+    "charge_from_grid": {
+      "name": "Charge from the grid",
+      "description": "Charges the battery from the grid to a target, for a time. Needs you to control the plant yourself.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "The GridZeno dongle." },
+        "target_soc": { "name": "Target", "description": "Charge to this level." },
+        "duration": { "name": "Duration", "description": "Stops by itself after this many minutes." },
+        "export_limit": { "name": "Export limit", "description": "At most this share of the inverter's power to the grid meanwhile (optional)." }
+      }
+    },
+    "hold_battery": {
+      "name": "Hold the battery",
+      "description": "Keeps the battery as it is: the house uses the sun and the grid. Needs you to control the plant yourself.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "The GridZeno dongle." },
+        "duration": { "name": "Duration", "description": "Stops by itself after this many minutes." },
+        "export_limit": { "name": "Export limit", "description": "At most this share of the inverter's power to the grid meanwhile (optional)." }
+      }
+    },
+    "sell_from_battery": {
+      "name": "Sell from the battery",
+      "description": "Sells from the battery with a power, down to a floor. Needs you to control the plant yourself.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "The GridZeno dongle." },
+        "power": { "name": "Power", "description": "How hard to sell." },
+        "floor_soc": { "name": "Floor", "description": "Stop at this level (default: your minimum in GridZeno)." },
+        "duration": { "name": "Duration", "description": "Stops by itself after this many minutes." },
+        "export_limit": { "name": "Export limit", "description": "At most this share of the inverter's power to the grid meanwhile (optional)." }
+      }
+    },
+    "limit_export": {
+      "name": "Limit selling to the grid",
+      "description": "Sets the inverter's export limit for a time; 0 stops selling. Needs you to control the plant yourself.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "The GridZeno dongle." },
+        "export_limit": { "name": "Export limit", "description": "At most this share of the inverter's power." },
+        "duration": { "name": "Duration", "description": "Stops by itself after this many minutes." }
+      }
+    },
+    "release": {
+      "name": "Give the inverter its own settings back",
+      "description": "Ends a running command at once.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "The GridZeno dongle." }
+      }
+    }
+  }
+}

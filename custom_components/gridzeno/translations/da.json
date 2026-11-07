@@ -1,0 +1,246 @@
+{
+  "config": {
+    "flow_title": "GridZeno {device_id}",
+    "step": {
+      "user": {
+        "title": "Forbind en GridZeno-dongle",
+        "description": "Som regel finder Home Assistant selv donglen på dit netværk. Gør den ikke det, så skriv dens adresse her. Den står på siden Dongle i GridZeno.",
+        "data": {
+          "host": "Adresse",
+          "port": "Port"
+        }
+      },
+      "zeroconf_confirm": {
+        "title": "Forbind GridZeno {device_id}?",
+        "description": "Home Assistant har fundet GridZeno-donglen {device_id} på {host}. Derefter viser Home Assistant en kode på 6 cifre, og du godkender forbindelsen i GridZeno."
+      },
+      "reauth_confirm": {
+        "title": "Forbind GridZeno {device_id} igen",
+        "description": "Donglen kender ikke længere denne Home Assistant: adgangen er fjernet, eller donglen er parret med en anden konto. Forbind den igen, og godkend den i GridZeno."
+      },
+      "reconfigure": {
+        "title": "Ret donglens adresse",
+        "data": {
+          "host": "Adresse",
+          "port": "Port"
+        }
+      }
+    },
+    "progress": {
+      "wait_for_approval": "Åbn GridZeno (Integrationer, Home Assistant) i browseren eller appen. Godkend forbindelsen, når GridZeno viser den samme kode som her:\n\n## {code}\n\nViser GridZeno en anden kode, så afvis: så er det ikke din dongle. Anmodningen udløber efter 10 minutter."
+    },
+    "error": {
+      "cannot_connect": "Donglen svarede ikke på den adresse.",
+      "not_a_dongle": "Noget svarede, men ikke en GridZeno-dongle."
+    },
+    "abort": {
+      "already_configured": "Donglen er allerede forbundet. Dens adresse er opdateret.",
+      "cannot_connect": "Donglen svarede ikke.",
+      "not_a_dongle": "Det er ikke en GridZeno-dongle.",
+      "unsupported_api": "Donglen taler en nyere udgave af det lokale API. Opdatér GridZeno-integrationen i HACS.",
+      "no_room": "Der er allerede forbundet fire Home Assistants til donglen. Fjern en i GridZeno først.",
+      "too_many": "Donglen har fået for mange anmodninger. Vent et par minutter, og prøv igen.",
+      "pairing_failed": "Nøgleudvekslingen med donglen mislykkedes. Noget på netværket står måske i vejen. Prøv igen.",
+      "denied": "Forbindelsen blev afvist i GridZeno.",
+      "expired": "Anmodningen udløb, før den blev godkendt. Prøv igen.",
+      "reauth_successful": "Forbundet igen.",
+      "reconfigure_successful": "Adressen er rettet.",
+      "another_dongle": "En anden dongle svarede på den adresse."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "pv_power": { "name": "Sol" },
+      "grid_import_power": { "name": "Køb fra nettet" },
+      "grid_export_power": { "name": "Salg til nettet" },
+      "load_power": { "name": "Husets forbrug" },
+      "battery_power": { "name": "Batteriets effekt" },
+      "battery_charge_power": { "name": "Batteriet lader" },
+      "battery_discharge_power": { "name": "Batteriet aflader" },
+      "load_register_power": { "name": "Forbrug (inverterens register)" },
+      "battery_soc": { "name": "Batteri" },
+      "string_power": { "name": "Streng {number}" },
+      "temperature_inverter": { "name": "Inverterens temperatur" },
+      "temperature_ipm": { "name": "Effektmodulets temperatur" },
+      "temperature_boost": { "name": "Boost-temperatur" },
+      "temperature_battery": { "name": "Batteriets temperatur" },
+      "energy_pv": { "name": "Sol i alt" },
+      "energy_grid_import": { "name": "Købt i alt" },
+      "energy_grid_export": { "name": "Solgt i alt" },
+      "energy_battery_charge": { "name": "Ind i batteriet i alt" },
+      "energy_battery_discharge": { "name": "Ud af batteriet i alt" },
+      "energy_load": { "name": "Husets forbrug i alt" },
+      "today_pv": { "name": "Sol i dag" },
+      "today_grid_import": { "name": "Købt i dag" },
+      "today_grid_export": { "name": "Solgt i dag" },
+      "today_battery_charge": { "name": "Ind i batteriet i dag" },
+      "today_battery_discharge": { "name": "Ud af batteriet i dag" },
+      "today_load": { "name": "Husets forbrug i dag" },
+      "buy_price": { "name": "Købspris" },
+      "sell_price": { "name": "Salgspris" },
+      "spot_price": { "name": "Spotpris" },
+      "cheapest_today": { "name": "Billigste kvarter i dag" },
+      "dearest_today": { "name": "Dyreste kvarter i dag" },
+      "cheapest_tomorrow": { "name": "Billigste kvarter i morgen" },
+      "dearest_tomorrow": { "name": "Dyreste kvarter i morgen" },
+      "solar_forecast_today": { "name": "Solprognose i dag" },
+      "solar_forecast_tomorrow": { "name": "Solprognose i morgen" },
+      "solar_forecast_rest_of_today": { "name": "Solprognose resten af i dag" },
+      "plan_now": {
+        "name": "Planen nu",
+        "state": {
+          "charge_solar": "Lader fra solen",
+          "charge_grid": "Lader fra nettet",
+          "hold": "Holder batteriet",
+          "export": "Sælger solstrøm",
+          "discharge_load": "Batteriet dækker huset",
+          "discharge_export": "Sælger fra batteriet",
+          "import": "Køber fra nettet",
+          "idle": "Intet at gøre"
+        }
+      },
+      "plan_now_until": { "name": "Planen nu til" },
+      "plan_next": {
+        "name": "Planen bagefter",
+        "state": {
+          "charge_solar": "Lader fra solen",
+          "charge_grid": "Lader fra nettet",
+          "hold": "Holder batteriet",
+          "export": "Sælger solstrøm",
+          "discharge_load": "Batteriet dækker huset",
+          "discharge_export": "Sælger fra batteriet",
+          "import": "Køber fra nettet",
+          "idle": "Intet at gøre"
+        }
+      },
+      "plan_next_start": { "name": "Planen bagefter fra" },
+      "control_mode": {
+        "name": "Styring",
+        "state": { "auto": "GridZeno styrer", "manual": "Du styrer selv" }
+      },
+      "writer": {
+        "name": "Styres af",
+        "state": { "gridzeno": "GridZeno", "home_assistant": "Home Assistant", "none": "Inverteren selv" }
+      },
+      "measured_at": { "name": "Seneste aflæsning" },
+      "last_cloud_contact": { "name": "Seneste kontakt med GridZeno" },
+      "wifi_rssi": { "name": "WiFi-signal" },
+      "uptime": { "name": "Oppetid" },
+      "command_check": {
+        "name": "Seneste kontrol af en kommando",
+        "state": {
+          "pending": "Kontrolleres",
+          "confirmed": "Bekræftet",
+          "unconfirmed": "Ikke bekræftet",
+          "at_limit": "Ved en grænse",
+          "ended": "Sluttet"
+        }
+      }
+    },
+    "binary_sensor": {
+      "inverter_connected": { "name": "Læser inverteren" },
+      "cloud_connected": { "name": "Forbundet til GridZeno" },
+      "plan_stale": { "name": "Planen er forældet" }
+    },
+    "select": {
+      "command": {
+        "name": "Kommando",
+        "state": {
+          "none": "Inverterens egne indstillinger",
+          "charge_grid": "Lad fra nettet",
+          "hold": "Hold batteriet",
+          "sell": "Sælg fra batteriet",
+          "limit_export": "Begræns salget til nettet"
+        }
+      }
+    },
+    "number": {
+      "charge_target": { "name": "Kommando: mål ved opladning" },
+      "sell_power": { "name": "Kommando: effekt ved salg" },
+      "sell_floor": { "name": "Kommando: gulv ved salg" },
+      "command_duration": { "name": "Kommando: varighed" },
+      "command_export_limit": { "name": "Kommando: eksportgrænse" }
+    },
+    "button": {
+      "release": { "name": "Giv inverteren dens egne indstillinger tilbage" }
+    }
+  },
+  "exceptions": {
+    "unknown_entry": { "message": "Det er ikke en GridZeno-dongle i denne Home Assistant." },
+    "read_only": { "message": "Denne Home Assistant må kun læse. Giv den lov til at styre i GridZeno (forbind den igen, og vælg læse og styre)." },
+    "not_authorized": { "message": "Donglen kender ikke længere denne Home Assistant. Forbind den igen." },
+    "cannot_connect": { "message": "Donglen svarede ikke." },
+    "bad_answer": { "message": "Donglens svar kunne ikke stoles på (ingen gyldig underskrift). Prøv igen; sker det igen, står noget på netværket måske i vejen." },
+    "refused": { "message": "Donglen afviste: {code}." },
+    "refused_auto_mode": { "message": "GridZeno styrer anlægget. Vælg at styre selv under Automatik i GridZeno først." },
+    "refused_scope": { "message": "Denne Home Assistant må kun læse." },
+    "refused_not_paired": { "message": "Donglen hører ikke til en GridZeno-konto." },
+    "refused_no_battery": { "message": "Anlægget har intet batteri." },
+    "refused_export_limit_not_writable": { "message": "GridZeno må ikke ændre eksportgrænsen på denne inverter." },
+    "refused_commands_disabled": { "message": "Styring fra Home Assistant er ikke slået til på donglen endnu." },
+    "refused_target_soc_out_of_range": { "message": "Målet ligger uden for de batterigrænser, du har sat i GridZeno." },
+    "refused_power_out_of_range": { "message": "Effekten ligger uden for det, inverteren kan." },
+    "refused_floor_out_of_range": { "message": "Gulvet ligger uden for de batterigrænser, du har sat i GridZeno." },
+    "refused_control_not_allowed": { "message": "Donglen styrer ikke denne inverter: GridZeno har ikke frigivet styring af modellen, eller inverteren er ikke den valgte model." },
+    "refused_mode_not_supported": { "message": "Denne inverter kan ikke den kommando." },
+    "refused_duration_out_of_range": { "message": "Varigheden skal være mellem 15 minutter og 12 timer." }
+  },
+  "issues": {
+    "dongle_api_newer": {
+      "title": "GridZeno {device_id} kræver en nyere integration",
+      "description": "Donglen taler version {dongle_api} af sit lokale API, og integrationen kender version {integration_api}. Opdatér GridZeno-integrationen i HACS. Indtil da kan nogle værdier mangle."
+    },
+    "dongle_api_older": {
+      "title": "GridZeno {device_id} skal have ny firmware",
+      "description": "Donglen taler version {dongle_api} af sit lokale API, og integrationen forventer version {integration_api}. Donglen opdaterer sig selv fra GridZeno; gør den ikke det, så skriv til GridZenos support."
+    }
+  },
+  "services": {
+    "charge_from_grid": {
+      "name": "Lad fra nettet",
+      "description": "Lader batteriet fra nettet til et mål i et stykke tid. Kræver, at du selv styrer anlægget.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "GridZeno-donglen." },
+        "target_soc": { "name": "Mål", "description": "Lad til dette niveau." },
+        "duration": { "name": "Varighed", "description": "Stopper af sig selv efter så mange minutter." },
+        "export_limit": { "name": "Eksportgrænse", "description": "Højst denne del af inverterens effekt til nettet imens (valgfri)." }
+      }
+    },
+    "hold_battery": {
+      "name": "Hold batteriet",
+      "description": "Holder batteriet, som det er: huset bruger solen og nettet. Kræver, at du selv styrer anlægget.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "GridZeno-donglen." },
+        "duration": { "name": "Varighed", "description": "Stopper af sig selv efter så mange minutter." },
+        "export_limit": { "name": "Eksportgrænse", "description": "Højst denne del af inverterens effekt til nettet imens (valgfri)." }
+      }
+    },
+    "sell_from_battery": {
+      "name": "Sælg fra batteriet",
+      "description": "Sælger fra batteriet med en effekt ned til et gulv. Kræver, at du selv styrer anlægget.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "GridZeno-donglen." },
+        "power": { "name": "Effekt", "description": "Hvor hårdt der sælges." },
+        "floor_soc": { "name": "Gulv", "description": "Stop ved dette niveau (standard: dit minimum i GridZeno)." },
+        "duration": { "name": "Varighed", "description": "Stopper af sig selv efter så mange minutter." },
+        "export_limit": { "name": "Eksportgrænse", "description": "Højst denne del af inverterens effekt til nettet imens (valgfri)." }
+      }
+    },
+    "limit_export": {
+      "name": "Begræns salget til nettet",
+      "description": "Sætter inverterens eksportgrænse i et stykke tid; 0 stopper salget. Kræver, at du selv styrer anlægget.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "GridZeno-donglen." },
+        "export_limit": { "name": "Eksportgrænse", "description": "Højst denne del af inverterens effekt." },
+        "duration": { "name": "Varighed", "description": "Stopper af sig selv efter så mange minutter." }
+      }
+    },
+    "release": {
+      "name": "Giv inverteren dens egne indstillinger tilbage",
+      "description": "Stopper en kommando med det samme.",
+      "fields": {
+        "config_entry_id": { "name": "Dongle", "description": "GridZeno-donglen." }
+      }
+    }
+  }
+}
