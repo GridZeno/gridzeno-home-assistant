@@ -3,7 +3,8 @@
 Both ends of the protocol share this module: the dongle uses its half and the
 integration the client's half. The dongle's firmware implements the same
 functions in C++ against the same test vectors, so the two cannot drift apart
-unnoticed.
+unnoticed. The code matches the firmware's reference module; only comments and
+docstrings differ (internal file references are left out of this public copy).
 
 Nothing here does I/O, keeps state or reads a clock, so all of it can be
 tested with fixed inputs. The only dependency is `cryptography` (the P-256
@@ -263,7 +264,7 @@ def validate_command(command: object, context: dict) -> str | None:
         has_battery            bool
         min_soc, max_soc       int                  (the owner's limits)
         rated_w                int | None           (the inverter's own rating)
-        export_limit_writable  bool                 (GridZeno may write 122/123 here)
+        export_limit_writable  bool                 (GridZeno may set the export rate here: 123 or 30201, never 122/30200)
         control_allowed        bool, default True   (the write right and the model chosen)
         can_charge, can_hold, can_sell  bool, default True  (what the inverter's control can do)
 
