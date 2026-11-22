@@ -15,12 +15,14 @@ from typing import Any
 
 import voluptuous as vol
 
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
+from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlowWithReload
 from homeassistant.const import CONF_HOST, CONF_PORT
+from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.service_info.zeroconf import ZeroconfServiceInfo
 
 from . import protocol as p
+from . import signals
 from .api import BadAnswer, CannotConnect, CommandRefused, DongleClient, Pairing
 from .const import (
     CONF_CLIENT_ID,
@@ -38,6 +40,11 @@ class GridZenoConfigFlow(ConfigFlow, domain=DOMAIN):
     """One entry per dongle; the dongle's own id is the unique id."""
 
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> GridZenoOptionsFlow:
+        return GridZenoOptionsFlow()
 
     def __init__(self) -> None:
         self._host: str | None = None
@@ -211,6 +218,33 @@ class GridZenoConfigFlow(ConfigFlow, domain=DOMAIN):
                  vol.Required(CONF_PORT, default=entry.data[CONF_PORT]): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535))}
             ),
             errors=errors,
+        )
+
+
+class GridZenoOptionsFlow(OptionsFlowWithReload):
+    """The signals for the owner's own automations (signals.py): how many
+    cheap hours a day, and how much sold counts as a surplus."""
+
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(data=user_input)
+        options = self.config_entry.options
+        low_h, high_h = signals.CHEAP_HOURS_RANGE
+        low_w, high_w = signals.SURPLUS_W_RANGE
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        signals.OPTION_CHEAP_HOURS,
+                        default=options.get(signals.OPTION_CHEAP_HOURS, signals.DEFAULT_CHEAP_HOURS),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=low_h, max=high_h)),
+                    vol.Required(
+                        signals.OPTION_SURPLUS_W,
+                        default=options.get(signals.OPTION_SURPLUS_W, signals.DEFAULT_SURPLUS_W),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=low_w, max=high_w)),
+                }
+            ),
         )
 
 
