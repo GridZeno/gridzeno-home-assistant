@@ -27,6 +27,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.restore_state import ExtraStoredData, RestoreEntity
 from homeassistant.util import dt as dt_util
 
+from . import signals
 from .const import STALE_READING
 from .coordinator import GridZenoConfigEntry, GridZenoCoordinator, GridZenoData
 from .entity import GridZenoEntity
@@ -142,6 +143,16 @@ def _plan_block(which: str, field: str) -> Callable[[GridZenoData], Any]:
         return raw
 
     return value
+
+
+def cheap_hours_option(coordinator: GridZenoCoordinator) -> int:
+    """N in "Cheap hour now": the integration's option, default 4."""
+    return int(coordinator.config_entry.options.get(signals.OPTION_CHEAP_HOURS, signals.DEFAULT_CHEAP_HOURS))
+
+
+def surplus_option(coordinator: GridZenoCoordinator) -> float:
+    """X in "Surplus now": the integration's option, default 1000 W."""
+    return float(coordinator.config_entry.options.get(signals.OPTION_SURPLUS_W, signals.DEFAULT_SURPLUS_W))
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -307,6 +318,7 @@ async def async_setup_entry(
     strings = (coordinator.data.state.get("power_w") or {}).get("mppt") or []
     entities += [GridZenoStringSensor(coordinator, i) for i in range(len(strings))]
     entities += [GridZenoTodaySensor(coordinator, k) for k in TODAY]
+    entities.append(GridZenoNextCheapSensor(coordinator))
     async_add_entities(entities)
 
 
@@ -337,6 +349,40 @@ class GridZenoSensor(GridZenoEntity, SensorEntity):
         if self.entity_description.attrs_fn is None or self.coordinator.data is None:
             return None
         return self.entity_description.attrs_fn(self.coordinator.data)
+
+
+class GridZenoNextCheapSensor(GridZenoEntity, SensorEntity):
+    """When the next cheap hours begin ("Cheap hour now", joined where they
+    follow each other): the start, and the end as an attribute. While a cheap
+    hour runs, its start. Only with prices (Smart and Pro)."""
+
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_translation_key = "next_cheap_hours"
+
+    def __init__(self, coordinator: GridZenoCoordinator) -> None:
+        super().__init__(coordinator, "next_cheap_hours")
+
+    def _window(self) -> tuple[datetime, datetime] | None:
+        return signals.next_cheap_window(
+            self.coordinator.data.outlook.get("quarters") or [], cheap_hours_option(self.coordinator),
+            dt_util.utcnow(), dt_util.get_default_time_zone(),
+        )
+
+    @property
+    def available(self) -> bool:
+        return super().available and self.coordinator.data is not None and bool(
+            self.coordinator.data.outlook.get("available")
+        )
+
+    @property
+    def native_value(self) -> datetime | None:
+        window = self._window()
+        return window[0] if window else None
+
+    @property
+    def extra_state_attributes(self) -> dict:
+        window = self._window()
+        return {"end": window[1].isoformat() if window else None}
 
 
 class GridZenoStringSensor(GridZenoEntity, SensorEntity):

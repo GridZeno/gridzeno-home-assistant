@@ -48,6 +48,22 @@
       "another_dongle": "Another dongle answered at that address."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Signals for your automations",
+        "description": "Cheap hour now is on in each day's cheapest hours, by your buy price (the spot price when you have not chosen a grid company in GridZeno); it needs Smart or Pro. Surplus now is on when you sell more than the power below and the battery is full, or there is no battery.",
+        "data": {
+          "cheap_hours": "Cheap hours a day",
+          "surplus_w": "Surplus from"
+        },
+        "data_description": {
+          "cheap_hours": "How many of each day's hours count as cheap, 1 to 12.",
+          "surplus_w": "In watts. Surplus now comes on when you sell more than this in two readings in a row."
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
       "pv_power": { "name": "Solar power" },
@@ -86,6 +102,7 @@
       "solar_forecast_today": { "name": "Solar forecast today" },
       "solar_forecast_tomorrow": { "name": "Solar forecast tomorrow" },
       "solar_forecast_rest_of_today": { "name": "Solar forecast rest of today" },
+      "next_cheap_hours": { "name": "Next cheap hours" },
       "plan_now": {
         "name": "Plan now",
         "state": {
@@ -140,7 +157,10 @@
     "binary_sensor": {
       "inverter_connected": { "name": "Reads the inverter" },
       "cloud_connected": { "name": "Connected to GridZeno" },
-      "plan_stale": { "name": "Plan out of date" }
+      "plan_stale": { "name": "Plan out of date" },
+      "cheap_hour_now": { "name": "Cheap hour now" },
+      "surplus_now": { "name": "Surplus now" },
+      "negative_price_now": { "name": "Negative price now" }
     },
     "select": {
       "command": {
