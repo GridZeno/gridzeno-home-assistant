@@ -140,17 +140,29 @@ class SurplusTracker:
     is: a water heater that eats the surplus does not switch itself off as
     long as the sun and a full battery cover it. Either way it holds at least
     MIN_STATE_TIME.
+
+    After a restart or a reload it starts in the state Home Assistant saved
+    (restore), held as if it had just changed. With nothing saved it is
+    unknown (None) until two readings in a row agree, so it never writes an
+    "off" it does not know; a reading between the two conditions counts as
+    off then.
     """
 
     def __init__(self) -> None:
-        self.on = False
+        self.on: bool | None = None
         self._changed_at: datetime | None = None
         self._last_reading: str | None = None
+        self._pending: bool | None = None
         self._streak = 0
+
+    def restore(self, on: bool, now: datetime) -> None:
+        """Start in the saved state, as if it had changed now."""
+        self.on, self._changed_at, self._pending, self._streak = on, now, None, 0
 
     def update(self, state: dict, threshold_w: float, now: datetime) -> bool | None:
         """Feed the dongle's /state; returns the signal, or None when the
-        reading cannot tell (no grid meter, the battery's level unknown)."""
+        reading cannot tell (no grid meter, the battery's level unknown) or
+        it is not known yet."""
         reading = state.get("measured_at")
         verdict = self._verdict(state, threshold_w)
         if verdict is None:
@@ -159,14 +171,19 @@ class SurplusTracker:
         if reading == self._last_reading:
             return self.on  # the same reading again: nothing new to count
         self._last_reading = reading
-        wants = self.on if verdict == "keep" else verdict == "on"
+        if verdict == "keep":
+            wants = bool(self.on)
+        else:
+            wants = verdict == "on"
         if wants == self.on:
             self._streak = 0
             return self.on
+        if wants != self._pending:
+            self._pending, self._streak = wants, 0
         self._streak += 1
         held = self._changed_at is None or now - self._changed_at >= MIN_STATE_TIME
         if self._streak >= READINGS_IN_A_ROW and held:
-            self.on, self._changed_at, self._streak = wants, now, 0
+            self.on, self._changed_at, self._pending, self._streak = wants, now, None, 0
         return self.on
 
     @staticmethod

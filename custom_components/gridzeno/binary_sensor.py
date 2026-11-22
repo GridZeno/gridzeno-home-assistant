@@ -13,8 +13,10 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
 )
 from homeassistant.const import EntityCategory
+from homeassistant.const import STATE_OFF, STATE_ON
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.util import dt as dt_util
 
 from . import signals
@@ -119,10 +121,12 @@ class GridZenoNegativePriceSensor(_OutlookSignal):
         return signals.negative_now(_quarter_now(self.coordinator.data))
 
 
-class GridZenoSurplusSensor(GridZenoEntity, BinarySensorEntity):
+class GridZenoSurplusSensor(GridZenoEntity, RestoreEntity, BinarySensorEntity):
     """On when the plant sells over X W and the battery is full, or there is
     no battery; with hysteresis (signals.SurplusTracker). Every subscription:
-    it reads only the measurements."""
+    it reads only the measurements. Starts in the state it had before a
+    restart or a reload (a changed option reloads the integration), so a
+    relay on it is not switched off and on again."""
 
     _attr_translation_key = "surplus_now"
 
@@ -130,6 +134,12 @@ class GridZenoSurplusSensor(GridZenoEntity, BinarySensorEntity):
         super().__init__(coordinator, "surplus_now")
         self._tracker = signals.SurplusTracker()
         self._value: bool | None = None
+
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        last = await self.async_get_last_state()
+        if last is not None and last.state in (STATE_ON, STATE_OFF):
+            self._tracker.restore(last.state == STATE_ON, dt_util.utcnow())
         self._update()
 
     def _update(self) -> None:

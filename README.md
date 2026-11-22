@@ -63,7 +63,7 @@ Shelly, Zigbee or Tuya switch.
 |---|---|
 | **Cheap hour now** | the hour is one of the day's cheapest hours, by your buy price (the spot price when you have not chosen a grid company in GridZeno). 4 hours a day unless you choose another number. Each day counts by itself, and only the hours with known prices. The attribute `hours` lists them with their price. |
 | **Next cheap hours** (a time) | when the next cheap hours begin, joined where they follow each other; the attribute `end` is when they end. While a cheap hour runs, its start. |
-| **Surplus now** | you sell more than 1000 W (or the power you choose) in two readings in a row, and the battery is full (at the highest level you set in GridZeno) or there is no battery. It goes off when the house buys from the grid or the battery discharges, two readings in a row, or the battery falls 5 points below full. A consumer that uses the surplus does not switch itself off as long as the sun covers it. It stays on or off at least 5 minutes. |
+| **Surplus now** | you sell more than 1000 W (or the power you choose) in two readings in a row, and the battery is full (at the highest level you set in GridZeno) or there is no battery. It goes off when the house buys from the grid or the battery discharges, two readings in a row, or the battery falls 5 points below full. A consumer that uses the surplus does not switch itself off as long as the sun covers it. It stays on or off at least 5 minutes, also over a restart of Home Assistant. |
 | **Negative price now** | your buy price is below zero. |
 
 Cheap hour now, Next cheap hours and Negative price now need the prices, as
@@ -82,6 +82,7 @@ automation:
     triggers:
       - trigger: state
         entity_id: binary_sensor.gridzeno_gz_a1b2c3_cheap_hour_now
+        to: ["on", "off"]
     actions:
       - action: >-
           {{ 'switch.turn_on' if trigger.to_state.state == 'on' else 'switch.turn_off' }}

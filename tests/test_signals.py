@@ -175,26 +175,26 @@ def feed(tracker, readings, threshold=1000, start=0):
 def test_surplus_needs_two_readings_in_a_row_over_the_threshold_and_a_full_battery():
     t = signals.SurplusTracker()
     assert feed(t, [state(0, export=1500), state(1, export=900), state(2, export=1500), state(3, export=1600)]) == [
-        False, False, False, True]
+        None, None, None, True]
 
 
 def test_the_same_reading_twice_counts_once():
     t = signals.SurplusTracker()
-    assert feed(t, [state(0, export=1500), state(0, export=1500), state(0, export=1500)]) == [False, False, False]
+    assert feed(t, [state(0, export=1500), state(0, export=1500), state(0, export=1500)]) == [None, None, None]
     assert feed(t, [state(1, export=1500)], start=3) == [True]
 
 
 def test_not_while_the_battery_charges_below_its_ceiling():
     t = signals.SurplusTracker()
-    assert feed(t, [state(i, export=3000, battery=2000, soc=90) for i in range(4)]) == [False] * 4
+    assert feed(t, [state(i, export=3000, battery=2000, soc=90) for i in range(4)]) == [None, False, False, False]
     # Ceiling is the owner's max in GridZeno, with a small margin (a BMS that stops at 99).
     t = signals.SurplusTracker()
-    assert feed(t, [state(i, export=3000, soc=79, max_soc=80) for i in range(2)]) == [False, True]
+    assert feed(t, [state(i, export=3000, soc=79, max_soc=80) for i in range(2)]) == [None, True]
 
 
 def test_no_battery():
     t = signals.SurplusTracker()
-    assert feed(t, [state(i, export=1200, battery=None, soc=None, has_battery=False) for i in range(2)]) == [False, True]
+    assert feed(t, [state(i, export=1200, battery=None, soc=None, has_battery=False) for i in range(2)]) == [None, True]
 
 
 def test_hysteresis_a_consumer_eating_the_surplus_keeps_it_on():
@@ -225,6 +225,33 @@ def test_off_when_the_battery_discharges_or_falls_below_its_ceiling():
         feed(t, [state(0, export=2000), state(1, export=2000)])
         later = 70
         assert feed(t, [state(later + i, export=1500, **drop) for i in range(2)], start=later) == [True, False]
+
+
+def test_starts_in_the_saved_state_after_a_restart():
+    # On before the restart: still on, and held 5 minutes, though the house buys.
+    t = signals.SurplusTracker()
+    t.restore(True, T0)
+    assert feed(t, [state(i, imported=1500) for i in range(3)]) == [True, True, True]
+    later = 70
+    assert feed(t, [state(later, export=50)] + [state(later + 1 + i, imported=1500) for i in range(2)],
+                start=later) == [True, True, False]
+    # On, and the reading after the restart is in between: it stays on.
+    t = signals.SurplusTracker()
+    t.restore(True, T0)
+    assert feed(t, [state(i, export=200) for i in range(3)]) == [True, True, True]
+    # Off before the restart: off at once, not unknown.
+    t = signals.SurplusTracker()
+    t.restore(False, T0)
+    assert feed(t, [state(0, export=200)]) == [False]
+
+
+def test_nothing_saved_is_unknown_until_two_readings_agree():
+    # Never a false "off" first: two readings that disagree leave it unknown.
+    t = signals.SurplusTracker()
+    assert feed(t, [state(0, export=1500), state(1, imported=500), state(2, export=1500),
+                    state(3, export=1500)]) == [None, None, None, True]
+    t = signals.SurplusTracker()
+    assert feed(t, [state(0, export=200), state(1, export=200)]) == [None, False]
 
 
 def test_unknown_without_a_grid_meter_or_the_battery_level():
