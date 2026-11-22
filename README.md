@@ -4,8 +4,6 @@ The [GridZeno](https://gridzeno.com) dongle in Home Assistant, directly on your
 home network. Home Assistant talks to the dongle; nothing goes through
 GridZeno's servers, so it keeps working when the internet is down.
 
-The integration is in beta.
-
 [![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=GridZeno&repository=gridzeno-home-assistant&category=integration)
 
 ## What you get
