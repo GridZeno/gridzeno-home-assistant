@@ -11,7 +11,7 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/GridZeno/gridzeno-home-assistant/issues",
   "requirements": [],
-  "version": "0.2.0",
+  "version": "0.3.0",
   "zeroconf": [
     "_gridzeno._tcp.local."
   ]
